@@ -29,10 +29,10 @@ public class SecurityConfig {
                                                    UserDetailsService userDetailsService ) throws Exception {
         return http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request ->
-                        request.requestMatchers("/auth", "/signup").permitAll()
+                        request.requestMatchers("/auth", "/signup", "/api/v1").permitAll()
                                 .requestMatchers("swagger-ui.html", "/swagger-resources/**",
                                         "/api-docs/**", "swagger-ui/**").permitAll()
-                                .requestMatchers("/api/v1/long/**").hasRole("USER")
+                                .requestMatchers("/api/v1/create").hasRole("USER")
 //                                .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
                                 .anyRequest().authenticated())
                 .sessionManagement(session ->

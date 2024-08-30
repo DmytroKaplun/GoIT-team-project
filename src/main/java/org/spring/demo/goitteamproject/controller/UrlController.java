@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/shortLink")
+@RequestMapping("/api/v1/")
 @RequiredArgsConstructor
 public class UrlController {
     private final UrlShortenerService urlShortenerService;
@@ -25,8 +25,10 @@ public class UrlController {
     @GetMapping("/{slug}")
     public ResponseEntity<String> redirect(@PathVariable("slug") String slug) {
         String destinationLink = urlShortenerService.getDestinationLink(slug);
-        return ResponseEntity.status(HttpStatus.FOUND)
+        return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.TEXT_PLAIN)
                 .body(destinationLink);
     }
+
+
 }
