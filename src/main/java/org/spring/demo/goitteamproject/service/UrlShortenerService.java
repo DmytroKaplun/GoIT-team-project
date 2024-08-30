@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -42,14 +43,20 @@ public class UrlShortenerService {
         return "https://localhost:9999/" + slugStr;
     }
 
-    public List<String> findAllActiveUrls(String url) {
+    public List<String> findAllActiveUrls() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User authUser = userRepository.findByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with username " + username));
 
-        return List.of();
+        return urlRepository.findAllSlugsByUserId(authUser)
+                .orElseThrow(EntityNotFoundException::new);
     }
 
+    @Transactional
     public String getDestinationLink(String slug) {
-        return urlRepository.findDestinationBySlug(slug)
-                .orElseThrow(() -> new EntityNotFoundException("Url not found with slug " + slug));
+        Url url = urlRepository.findBySlug(slug).orElseThrow(EntityNotFoundException::new);
+        url.setClickCount(url.getClickCount() + 1L);
+        return url.getDestination();
     }
 
 //    @Transactional
