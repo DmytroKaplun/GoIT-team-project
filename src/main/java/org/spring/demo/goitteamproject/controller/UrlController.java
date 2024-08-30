@@ -24,6 +24,7 @@ public class UrlController {
 
     @GetMapping("/{slug}")
     public ResponseEntity<String> redirect(@PathVariable("slug") String slug) {
-        urlShortenerService.
+        urlShortenerService.getDestinationLink(slug);
+        return null;
     }
 }
